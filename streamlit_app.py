@@ -2,23 +2,10 @@
  "cells": [
   {
    "cell_type": "code",
-   "execution_count": 1,
+   "execution_count": 2,
    "id": "361dcdd3-b729-4455-a5b1-000587c47c9b",
    "metadata": {},
-   "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "2025-02-18 17:37:53.947 \n",
-      "  \u001b[33m\u001b[1mWarning:\u001b[0m to view this Streamlit app on a browser, run it with the following\n",
-      "  command:\n",
-      "\n",
-      "    streamlit run C:\\Users\\lenov\\anaconda3\\Lib\\site-packages\\ipykernel_launcher.py [ARGUMENTS]\n",
-      "2025-02-18 17:37:53.950 Session state does not function when running a script without `streamlit run`\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "import streamlit as st\n",
     "import numpy as np\n",
@@ -39,13 +26,17 @@
     "\n",
     "# Streamlit UI\n",
     "st.title(\"Stock Price Prediction & Sentiment Analysis\")\n",
+    "\n",
+    "# Stock symbol selection\n",
     "stock_symbol = st.selectbox(\"Select a stock:\", list(stock_names.values()))\n",
     "\n",
+    "# Date inputs for the time period of stock data\n",
     "start_date = st.date_input(\"Start Date\", datetime.date(2005, 1, 1))\n",
     "end_date = st.date_input(\"End Date\", datetime.date.today())\n",
     "\n",
+    "# Button to trigger stock data fetching and prediction\n",
     "if st.button(\"Fetch & Predict\"):\n",
-    "    # Fetch stock data\n",
+    "    # Fetch stock data from Yahoo Finance\n",
     "    st.write(\"Fetching stock data...\")\n",
     "    df = yf.download(stock_symbol, start=start_date, end=end_date)\n",
     "    \n",
@@ -54,11 +45,11 @@
     "    else:\n",
     "        st.success(\"Stock data retrieved successfully!\")\n",
     "\n",
-    "        # Plot stock price history\n",
+    "        # Display the stock price history\n",
     "        st.subheader(\"Stock Price History\")\n",
     "        st.line_chart(df[\"Close\"])\n",
     "\n",
-    "        # Fetch news & analyze sentiment\n",
+    "        # Function to fetch and analyze news sentiment\n",
     "        st.write(\"Fetching news data...\")\n",
     "        def get_google_news(ticker):\n",
     "            company_name = stock_names.get(ticker, ticker)\n",
@@ -86,7 +77,7 @@
     "        else:\n",
     "            st.warning(\"No relevant news found!\")\n",
     "\n",
-    "        # Train LSTM model\n",
+    "        # Train LSTM model for stock price prediction\n",
     "        st.write(\"Training LSTM model...\")\n",
     "\n",
     "        scaler = MinMaxScaler(feature_range=(0, 1))\n",
@@ -119,8 +110,7 @@
     "        predicted_price = scaler.inverse_transform(predicted_price)\n",
     "\n",
     "        st.subheader(\"Stock Price Prediction\")\n",
-    "        st.write(f\"Predicted Closing Price: **{predicted_price[0][0]:.2f} MYR**\")\n",
-    "\n"
+    "        st.write(f\"Predicted Closing Price: **{predicted_price[0][0]:.2f} MYR**\")\n"
    ]
   }
  ],
